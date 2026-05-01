@@ -1,5 +1,6 @@
 import os
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
+import asyncio
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo, Update
 from telegram.ext import Application, CommandHandler, ContextTypes
 
 TOKEN = os.environ.get("BOT_TOKEN")
@@ -23,8 +24,11 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         reply_markup=InlineKeyboardMarkup(keyboard)
     )
 
-if __name__ == "__main__":
+async def main():
     app = Application.builder().token(TOKEN).build()
     app.add_handler(CommandHandler("start", start))
     print("Bot started...")
-    app.run_polling()
+    await app.run_polling()
+
+if __name__ == "__main__":
+    asyncio.run(main())
