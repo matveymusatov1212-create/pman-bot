@@ -1,0 +1,35 @@
+import os
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
+from telegram.ext import Application, CommandHandler, ContextTypes
+
+# Токен берётся из переменной окружения (безопасно)
+TOKEN = os.environ.get("BOT_TOKEN")
+WEBAPP_URL = os.environ.get("WEBAPP_URL")
+
+WELCOME_TEXT = (
+    "Добро пожаловать\!\n\n"
+    "Здесь моё портфолио: визуализации, навесы МАФ и жилые пространства\.\n\n"
+    "Нажми кнопку ниже 👇"
+)
+
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    keyboard = [
+        [InlineKeyboardButton(
+            "🏠  Открыть портфолио",
+            web_app=WebAppInfo(url=WEBAPP_URL)
+        )]
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    await update.message.reply_markdown_v2(
+        WELCOME_TEXT,
+        reply_markup=reply_markup
+    )
+
+def main():
+    app = Application.builder().token(TOKEN).build()
+    app.add_handler(CommandHandler("start", start))
+    print("Bot started...")
+    app.run_polling()
+
+if __name__ == "__main__":
+    main()
